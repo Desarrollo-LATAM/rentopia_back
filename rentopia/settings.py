@@ -42,6 +42,17 @@ SECRET_KEY = env("SECRET_KEY")
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": env("DB_NAME"),
+        "USER": env("DB_USER"),
+        "PASSWORD": env("DB_PASSWORD"),
+        "HOST": env("DB_HOST"),
+        "PORT": env("DB_PORT"),
+    }
+}
+
 ALLOWED_HOSTS = []
 
 
@@ -71,6 +82,7 @@ LOCAL_APPS = [
 # Third persons applications
 THIRD_APPS = [
     "rest_framework",
+    "rest_framework_simplejwt",
     "django_filters",
     "drf_spectacular",
     "drf_standardized_errors",
@@ -111,8 +123,6 @@ WSGI_APPLICATION = "rentopia.wsgi.application"
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
-MONGODB_CONNECTION_STRING = env("CONNECTION_STRING")
-MONGODB_DATABASE = env("DATABASE")
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -153,7 +163,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
-    # "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_SCHEMA_CLASS": "drf_standardized_errors.openapi.AutoSchema",
     "EXCEPTION_HANDLER": "drf_standardized_errors.handler.exception_handler",
 }
