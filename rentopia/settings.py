@@ -108,9 +108,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "rentopia.wsgi.application"
 
-
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
+
+MONGODB_CONNECTION_STRING = env("CONNECTION_STRING")
+MONGODB_DATABASE = env("DATABASE")
 
 AUTH_PASSWORD_VALIDATORS = [
     {
