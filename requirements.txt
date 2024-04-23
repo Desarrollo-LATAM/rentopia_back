@@ -4,14 +4,15 @@ Django==5.0.4
 django-environ==0.11.2
 django-filter==24.2
 djangorestframework==3.15.1
+djangorestframework-simplejwt==5.3.1
 dnspython==2.6.1
 drf-spectacular==0.27.2
 drf-standardized-errors==0.13.0
 inflection==0.5.1
 jsonschema==4.21.1
 jsonschema-specifications==2023.12.1
+psycopg2-binary==2.9.9
 PyJWT==2.8.0
-pymongo==4.6.3
 PyYAML==6.0.1
 referencing==0.34.0
 rpds-py==0.18.0
