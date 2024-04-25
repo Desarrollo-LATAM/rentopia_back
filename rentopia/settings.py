@@ -86,6 +86,7 @@ THIRD_APPS = [
     "django_filters",
     "drf_spectacular",
     "drf_standardized_errors",
+    "channels",
 ]
 
 INSTALLED_APPS = BASE_APPS + LOCAL_APPS + THIRD_APPS
