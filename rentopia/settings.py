@@ -59,6 +59,7 @@ ALLOWED_HOSTS = []
 # Application definition
 # Applications core of Django
 BASE_APPS = [
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -80,7 +81,7 @@ LOCAL_APPS = [
 ]
 
 # Third persons applications
-THIRD_APPS = [
+THIRD_APPS = [    
     "rest_framework",
     "rest_framework_simplejwt",
     "django_filters",
@@ -120,6 +121,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "rentopia.wsgi.application"
+
+ASGI_APPLICATION = "rentopia.asgi.application"
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
