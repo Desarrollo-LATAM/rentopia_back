@@ -1,8 +1,10 @@
 import json
+
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.contrib.auth.models import User
 
-# TODO: Chequear porque no toma los imports de channels
+# TODO:  Ver si el campo "message" es el que llamé "content"
+
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -31,21 +33,21 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message = text_data_json['message']
+        message_content = text_data_json['message_content']
 
         # Enviar el mensaje a la sala
         await self.channel_layer.group_send(
             self.room_name,
             {
                 'type': 'chat_message',
-                'message': message
+                'message_content': message_content
             }
         )
 
     async def chat_message(self, event):
-        message = event['message']
+        message_content = event['message_content']
 
         # Enviar el mensaje al WebSocket
         await self.send(text_data=json.dumps({
-            'message': message
+            'message_content': message_content
         }))

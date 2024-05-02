@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block titulo %}
+        {% endblock titulo %}
+    </title>
+</head>
+<body>
+   <header>
+    <h1>Rentopia</h1>
+    <nav>
+        <a href="{% url 'login' %}">Login</a>
+        {% comment %} <a href="{% url 'categories' %}">Categorias</a>
+        <a href="{% url 'productos' %}">Productos</a>
+        <a href="{% url 'agpro' %}">Agregar Producto</a> {% endcomment %}
+        {% comment %}<a href="{% url 'admin' %}">Admin</a> {% endcomment %}
+    </nav>
+    </header>
+    
+        
+        {% block contenido %}
+        {% endblock contenido %}
+    </main>
+</body>
+</html>

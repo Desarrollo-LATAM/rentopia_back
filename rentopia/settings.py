@@ -58,8 +58,8 @@ ALLOWED_HOSTS = []
 
 # Application definition
 # Applications core of Django
-BASE_APPS = [
-    "daphne",
+BASE_APPS = [   
+    "daphne",     
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -81,13 +81,13 @@ LOCAL_APPS = [
 ]
 
 # Third persons applications
-THIRD_APPS = [    
+THIRD_APPS = [      
+    "channels", 
     "rest_framework",
     "rest_framework_simplejwt",
     "django_filters",
     "drf_spectacular",
-    "drf_standardized_errors",
-    "channels",
+    "drf_standardized_errors",    
 ]
 
 INSTALLED_APPS = BASE_APPS + LOCAL_APPS + THIRD_APPS
