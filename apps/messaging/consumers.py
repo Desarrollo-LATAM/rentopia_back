@@ -3,9 +3,6 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.contrib.auth.models import User
 
-# TODO:  Ver si el campo "message" es el que llamé "content"
-
-
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):

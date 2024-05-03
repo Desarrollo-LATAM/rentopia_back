@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken, Token
 
+from apps.abstracts.viewsets import AbstractViewSet
 from apps.messaging.api.serializers import MessageSerializer, UserSerializer
 from apps.messaging.models import MessageModel
 
@@ -65,7 +66,7 @@ class LoginViewSet(viewsets.ViewSet):
         
         
 #ViewSet para los mensajes
-class MessageViewSet(viewsets.ModelViewSet):        
+class MessageViewSet(AbstractViewSet):        
     serializer_class = MessageSerializer  
     authentication_classes = [BasicAuthentication, JWTAuthentication]
     permission_classes = [IsAuthenticated]  

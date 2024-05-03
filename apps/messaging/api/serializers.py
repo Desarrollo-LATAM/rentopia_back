@@ -2,12 +2,14 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
+from apps.abstracts.serializers import AbstractSerializer
 from apps.messaging.models import MessageModel
 
 
-class MessageSerializer(serializers.ModelSerializer):
+class MessageSerializer(AbstractSerializer, serializers.ModelSerializer):
     sender = serializers.StringRelatedField()
-    receiver = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    receiver = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())   
+
     
     class Meta:
         model = MessageModel 
@@ -23,8 +25,8 @@ class MessageSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         user = self.context['request'].user  # Obtiene el usuario autenticado desde el contexto
-        validated_data['sender'] = user  # Establece el remitente como el usuario autenticado
-                 
+        validated_data['sender'] = user  # Establece el remitente como el usuario autenticado        
+                   
         message_content = MessageModel.objects.create(**validated_data)
         return message_content
     
@@ -78,3 +80,23 @@ class LoginSerializer(serializers.Serializer):
 
 
 #TODO: reciever ahora se puede elegir, pero en la app deberá ser el el propietario que haya publicado su casa para alquilar
+
+# class CustomReceiverField(serializers.PrimaryKeyRelatedField):
+#     def to_representation(self, value):
+#         if value is not None:
+#             if hasattr(value, 'username'):
+#                 return value.username
+#             elif hasattr(value, 'user'):
+#                 if hasattr(value.user, 'username'):
+#                     return value.user.username
+#             return value.pk
+#         return None
+
+
+
+# Parte de create
+# Obtener el objeto receptor a partir del ID y establecer su nombre de usuario
+        # receiver_id = validated_data.get('receiver_id', None)
+        # if receiver_id is not None:
+        #     receiver = User.objects.get(pk=receiver_id)
+        #     validated_data['receiver'] = receiver.username
