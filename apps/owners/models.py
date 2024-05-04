@@ -31,7 +31,7 @@ class Owner(models.Model):
     name = models.CharField(max_length=50, null=True, blank=True)
     last_name = models.CharField(max_length=100, null=True, blank=True)
     address = models.CharField(max_length=200, null=True, blank=True)
-    rating_user = models.IntegerField(default=0)
+    rating_user = models.PositiveIntegerField(default=0)
     photo = models.ImageField(
         "Profiles",
         upload_to=get_upload_path,

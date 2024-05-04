@@ -23,6 +23,7 @@ class Property(AbstractModel):
         choices=PROPERTY_TYPE_CHOICES,
         blank=False,
     )
+    rating_property = models.PositiveIntegerField(default=0)
 
 
 class Apartment(Property):

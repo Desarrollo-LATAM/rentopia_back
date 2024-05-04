@@ -30,7 +30,7 @@ class Tenant(models.Model):
     user_id = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     name = models.CharField(max_length=50, null=True, blank=True)
     last_name = models.CharField(max_length=100, null=True, blank=True)
-    rating_user = models.IntegerField(default=0)
+    rating_user = models.PositiveIntegerField(default=0)
     phone = models.CharField(max_length=200, null=True, blank=True)
 
     class Meta:
