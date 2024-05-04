@@ -13,21 +13,31 @@ class MessageSerializer(AbstractSerializer, serializers.ModelSerializer):
     
     class Meta:
         model = MessageModel 
-        fields = ["id", "created", "updated", "sender", "receiver", "message_content", "state", "deleted_date"]
-        # Excluimos 'state' del formulario de creación
-        read_only_fields = ['state']
+        fields = ["id", "created", "updated", "sender", "receiver", "message_content", "deleted_date"]
+        # Excluimos 'is_active' del formulario de creación
+        #read_only_fields = ['is_active']
         
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        if instance.state:
+        if instance.is_active:
             del data["deleted_date"]   # Verifica si el mensaje está eliminado
         return data
     
+    
     def create(self, validated_data):
-        user = self.context['request'].user  # Obtiene el usuario autenticado desde el contexto
-        validated_data['sender'] = user  # Establece el remitente como el usuario autenticado        
-                   
-        message_content = MessageModel.objects.create(**validated_data)
+        # Obtiene el usuario autenticado desde el contexto
+        user = self.context['request'].user  
+        
+        # Establece el remitente como el usuario autenticado
+        validated_data['sender'] = user
+        
+        # Llama al método create() del modelo MessageModel para crear el objeto
+        message_content = MessageModel.objects.create(
+        sender=validated_data['sender'],
+        receiver=validated_data['receiver'],
+        message_content=validated_data['message_content']
+    )
+
         return message_content
     
     

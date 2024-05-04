@@ -7,10 +7,9 @@ from apps.messaging.consumers import ChatConsumer
 application = ProtocolTypeRouter({
     'websocket': AuthMiddlewareStack(
         URLRouter([
-            path('ws/mensajes/<str:receiver_name>/', ChatConsumer.as_asgi()),
+            path('ws/mensajes/<str:receiver_username>/', ChatConsumer.as_asgi()),
         ])
     ),
 })
 
 
-# TODO: Chequear si estan bien ubicados los archivos routing y consumers. También chequear si debo hacer de routers y routing un solo archivo

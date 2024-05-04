@@ -7,8 +7,8 @@ from django.contrib.auth.models import User
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.sender = self.scope['user']  # Obtener el usuario que inicia la conexión
-        self.receiver_name = self.scope['url_route']['kwargs']['receiver_name']
-        self.receiver = User.objects.get(username=self.receiver_name)  # Obtener el usuario destinatario
+        self.receiver_username = self.scope['url_route']['kwargs']['receiver_username']
+        self.receiver = User.objects.get(username=self.receiver_username)  # Obtener el usuario destinatario
 
         # Generar el nombre de la sala utilizando los nombres de usuario de ambos usuarios
         self.room_name = f"{self.sender.username}_{self.receiver.username}"

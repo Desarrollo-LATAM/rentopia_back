@@ -1,17 +1,17 @@
-from apps.abstracts.models import AbstractModel
 from django.contrib.auth.models import User
 from django.db import models
+
+from apps.abstracts.models import AbstractModel
 
 
 class MessageModel(AbstractModel):
     """Model definition for MessageModel."""
 
-    state = models.BooleanField('Estado',default = True)    
+    #is_active = models.BooleanField('Estado', default = True)    
     deleted_date = models.DateTimeField('Fecha de Eliminación', auto_now=True, auto_now_add=False, null=True)
-    sender= models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='sent_messages') 
-    receiver= models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='received_messages')     
-    message_content = models.CharField('Contenido del mensaje', max_length=100, blank=False, null=False, unique=True)
-    is_active = None
+    sender= models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='sender') 
+    receiver= models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='receiver')     
+    message_content = models.CharField('Contenido del mensaje', max_length=100, blank=False, null=False, unique=True)    
     
     
     class Meta:

@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.utils import timezone
 from rest_framework import status, viewsets
 from rest_framework.authentication import BasicAuthentication
@@ -74,10 +75,9 @@ class MessageViewSet(AbstractViewSet):
 
             
     def get_queryset(self):
-        print(self.request.user)  
-
-        # Filtrar las tareas por el usuario autenticado
-        return MessageModel.objects.filter(sender=self.request.user)   
+        user = self.request.user
+        # Filtrar los mensajes donde el usuario actual es el remitente o el receptor
+        return MessageModel.objects.filter(Q(sender=user) | Q(receiver=user)) 
    
     
     def create(self, request, *args, **kwargs):
@@ -101,7 +101,7 @@ class MessageViewSet(AbstractViewSet):
     @action(detail=True, methods=['delete'])
     def delete(self, request, pk=None):
         message = self.get_object()
-        message.state = False
+        message.is_active = False
         message.deleted_date = timezone.now()
         message.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
