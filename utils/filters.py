@@ -11,7 +11,7 @@ class UserFilterSet(rest_framework.FilterSet):
         fields = (
             "username",
             "email",
-            "is_producer",
+            "is_owner",
         )
 
 

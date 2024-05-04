@@ -227,6 +227,11 @@ PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL = (
     "http://localhost:3000/password-reset/confirm/"
 )
 
+STATIC_URL = "staticfiles/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+MEDIA_URLS = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
 # # Correo electrónico
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
