@@ -14,7 +14,7 @@ class User(PermissionsMixin, AbstractBaseUser, AbstractModel):
         email ( str ): email of the user
         is_staff ( bool ): is an user with permissions of the admin panel?
         is_active ( bool ): logic delete
-        is_producer ( bool ): Is farmer or buyer
+        is_owner ( bool ): Is Owner or tenant
 
     """
 

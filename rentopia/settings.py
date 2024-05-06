@@ -195,6 +195,7 @@ SIMPLE_JWT = {
 REST_AUTH = {
     "USE_JWT": True,
     "JWT_AUTH_HTTPONLY": False,
+    "REGISTER_SERIALIZER": "apps.users.api.serializers.UserRegistrationSerializer",
 }
 
 # Provider specific settings

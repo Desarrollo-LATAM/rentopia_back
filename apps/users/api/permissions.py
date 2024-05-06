@@ -10,7 +10,7 @@ class CreateUserPermission(permissions.BasePermission):
         return request.user and request.user.is_authenticated
 
 
-class IsBuyer(permissions.BasePermission):
+class IsTenant(permissions.BasePermission):
     def has_permission(self, request, view):
         return (
             request.user.is_authenticated
@@ -19,7 +19,7 @@ class IsBuyer(permissions.BasePermission):
         )
 
 
-class IsFarmer(permissions.BasePermission):
+class IsOwner(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user.is_authenticated and request.user.is_owner
 

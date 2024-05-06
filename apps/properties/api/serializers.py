@@ -12,16 +12,16 @@ class PropertySerializer(serializers.ModelSerializer):
 class ApartmentSerializer(PropertySerializer):
     class Meta(PropertySerializer.Meta):
         model = Apartment
-        fields = PropertySerializer.Meta.fields + ["num_floors"]
+        fields = "__all__"
 
 
 class LandSerializer(PropertySerializer):
     class Meta(PropertySerializer.Meta):
         model = Land
-        fields = PropertySerializer.Meta.fields + ["area"]
+        fields = "__all__"
 
 
 class HouseSerializer(PropertySerializer):
     class Meta(PropertySerializer.Meta):
         model = House
-        fields = PropertySerializer.Meta.fields + ["num_floors"]
+        fields = "__all__"
