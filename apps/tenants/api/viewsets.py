@@ -4,7 +4,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from apps.tenants.api.serializers import TenantSerializer
 from apps.users.api import permissions
-from utils.filters import OwnerFilterSet
+from utils.filters import TenantFilterSet
 from utils.pagination import ExtendedPagination
 
 
@@ -16,7 +16,7 @@ class TenantModelViewSet(ModelViewSet):
         filters.OrderingFilter,
         filters.SearchFilter,
     ]
-    filterset_class = OwnerFilterSet
+    filterset_class = TenantFilterSet
     permission_classes = [
         permissions.IsTenant | permissions.IsOwner | permissions.ReadOnly
     ]

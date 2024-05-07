@@ -27,7 +27,9 @@ class Owner(models.Model):
         is_active ( boolean ): logic delete.
     """
 
-    user_id = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    user_id = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="owner_profile", primary_key=True
+    )
     name = models.CharField(max_length=50, null=True, blank=True)
     last_name = models.CharField(max_length=100, null=True, blank=True)
     address = models.CharField(max_length=200, null=True, blank=True)

@@ -9,7 +9,7 @@ from apps.users.models import User
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        if sender.is_owner:
+        if instance.is_owner:
             Owner.objects.create(user_id=instance)
         else:
             Tenant.objects.create(user_id=instance)
