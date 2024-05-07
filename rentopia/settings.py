@@ -59,7 +59,8 @@ ALLOWED_HOSTS = []
 
 # Application definition
 # Applications core of Django
-BASE_APPS = [
+BASE_APPS = [   
+    "daphne",     
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -84,7 +85,8 @@ LOCAL_APPS = [
 ]
 
 # Third persons applications
-THIRD_APPS = [
+THIRD_APPS = [      
+    "channels", 
     "rest_framework",
     "rest_framework.authtoken",
     "rest_framework_simplejwt",
@@ -97,7 +99,6 @@ THIRD_APPS = [
     "dj_rest_auth",
     "dj_rest_auth.registration",
     "drf_standardized_errors",
-]
 
 INSTALLED_APPS = BASE_APPS + LOCAL_APPS + THIRD_APPS
 
@@ -133,6 +134,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "rentopia.wsgi.application"
 
+ASGI_APPLICATION = "rentopia.asgi.application"
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -159,7 +162,7 @@ AUTH_USER_MODEL = "users.User"
 
 LANGUAGE_CODE = "es-mx"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "America/Buenos_Aires"
 
 USE_I18N = True
 
