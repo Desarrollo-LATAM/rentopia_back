@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import logging
 import os
+from datetime import timedelta
 from pathlib import Path
 
 import environ
@@ -69,6 +70,7 @@ BASE_APPS = [
 
 # Local applications
 LOCAL_APPS = [
+    "apps.users",
     "apps.booking",
     "apps.chatbot",
     "apps.geolocalization",
@@ -76,15 +78,24 @@ LOCAL_APPS = [
     "apps.properties",
     "apps.rating",
     "apps.upload",
-    "apps.users",
+    "apps.owners",
+    "apps.tenants",
+    "apps.authentication",
 ]
 
 # Third persons applications
 THIRD_APPS = [
     "rest_framework",
+    "rest_framework.authtoken",
     "rest_framework_simplejwt",
     "django_filters",
     "drf_spectacular",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    # "allauth.socialaccount.providers.google",
+    "dj_rest_auth",
+    "dj_rest_auth.registration",
     "drf_standardized_errors",
 ]
 
@@ -101,6 +112,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "rentopia.urls"
+
+SITE_ID = 1  # make sure SITE_ID is set
 
 TEMPLATES = [
     {
@@ -139,6 +152,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = "users.User"
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
@@ -168,6 +182,59 @@ REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "drf_standardized_errors.handler.exception_handler",
 }
 
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": False,
+    "UPDATE_LAST_LOGIN": True,
+    "SIGNING_KEY": "complexsigningkey",  # generate a key and replace me
+    "ALGORITHM": "HS512",
+}
+
+REST_AUTH = {
+    "USE_JWT": True,
+    "JWT_AUTH_HTTPONLY": False,
+    "REGISTER_SERIALIZER": "apps.users.api.serializers.UserRegistrationSerializer",
+}
+
+# Provider specific settings
+# SOCIALACCOUNT_PROVIDERS = {
+#     "google": {
+#         # For each OAuth based provider, either add a ``SocialApp``
+#         # (``socialaccount`` app) containing the required client
+#         # credentials, or list them here:
+#         "APP": {"client_id": "123", "secret": "456", "key": ""}
+#     }
+# }
+
+ACCOUNT_AUTHENTICATION_METHOD = "username"
+# The user is required to hand over an e-mail address when signing up.
+ACCOUNT_EMAIL_REQUIRED = True
+
+# Determines the e-mail verification method during signup. When set to
+# "mandatory" the user is blocked from logging in until the email
+# address is verified. Choose "optional" or "none" to allow logins
+# with an unverified e-mail address. In case of "optional", the e-mail
+# verification mail is still sent, whereas in case of "none" no e-mail
+# verification mails are sent.
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+
+# <EMAIL_CONFIRM_REDIRECT_BASE_URL>/<key>
+EMAIL_CONFIRM_REDIRECT_BASE_URL = "http://localhost:3000/email/confirm/"
+
+# <PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL>/<uidb64>/<token>/
+PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL = (
+    "http://localhost:3000/password-reset/confirm/"
+)
+
+STATIC_URL = "staticfiles/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+MEDIA_URLS = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+# # Correo electrónico
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 ADMINS = [({env("ADMIN1_NAME")}, {env("ADMIN1_EMAIL")})]
 

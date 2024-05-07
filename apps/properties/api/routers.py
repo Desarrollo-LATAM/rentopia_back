@@ -1,13 +1,17 @@
-from django.urls import path, include
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from properties.api import PropertyViewSet, LandViewSet, ApartmentViewSet, HouseViewSet
+
+from apps.properties.api.viewsets import (
+    ApartmentViewSet,
+    HouseViewSet,
+    LandViewSet,
+    PropertyViewSet,
+)
 
 router = DefaultRouter()
-router.register(r'properties', PropertyViewSet)
-router.register(r'apartments', ApartmentViewSet)
-router.register(r'lands', LandViewSet)
-router.register(r'houses', HouseViewSet) 
+router.register(r"properties", PropertyViewSet, basename="properties")
+router.register(r"apartments", ApartmentViewSet, basename="apartments")
+router.register(r"lands", LandViewSet, basename="lands")
+router.register(r"houses", HouseViewSet, basename="houses")
 
-urlpatterns = [
-    path('', include(router.urls))
-]
+urlpatterns = [path("", include(router.urls))]
