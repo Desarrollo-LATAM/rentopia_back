@@ -1,6 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
-from rest_framework.viewsets import ModelViewSet
+from rest_framework import filters, mixins
+from rest_framework.viewsets import GenericViewSet
 
 from apps.tenants.api.serializers import TenantSerializer
 from apps.users.api import permissions
@@ -8,7 +8,12 @@ from utils.filters import TenantFilterSet
 from utils.pagination import ExtendedPagination
 
 
-class TenantModelViewSet(ModelViewSet):
+class TenantModelViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    GenericViewSet,
+):
     serializer_class = TenantSerializer
     pagination_class = ExtendedPagination
     filter_backends = [
