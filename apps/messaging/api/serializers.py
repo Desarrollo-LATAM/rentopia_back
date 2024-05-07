@@ -14,8 +14,7 @@ class MessageSerializer(AbstractSerializer, serializers.ModelSerializer):
     class Meta:
         model = MessageModel 
         fields = ["id", "created", "updated", "sender", "receiver", "message_content", "deleted_date"]
-        # Excluimos 'is_active' del formulario de creación
-        #read_only_fields = ['is_active']
+        
         
     def to_representation(self, instance):
         data = super().to_representation(instance)
@@ -90,23 +89,3 @@ class LoginSerializer(serializers.Serializer):
 
 
 #TODO: reciever ahora se puede elegir, pero en la app deberá ser el el propietario que haya publicado su casa para alquilar
-
-# class CustomReceiverField(serializers.PrimaryKeyRelatedField):
-#     def to_representation(self, value):
-#         if value is not None:
-#             if hasattr(value, 'username'):
-#                 return value.username
-#             elif hasattr(value, 'user'):
-#                 if hasattr(value.user, 'username'):
-#                     return value.user.username
-#             return value.pk
-#         return None
-
-
-
-# Parte de create
-# Obtener el objeto receptor a partir del ID y establecer su nombre de usuario
-        # receiver_id = validated_data.get('receiver_id', None)
-        # if receiver_id is not None:
-        #     receiver = User.objects.get(pk=receiver_id)
-        #     validated_data['receiver'] = receiver.username
