@@ -99,6 +99,7 @@ THIRD_APPS = [
     "dj_rest_auth",
     "dj_rest_auth.registration",
     "drf_standardized_errors",
+]
 
 INSTALLED_APPS = BASE_APPS + LOCAL_APPS + THIRD_APPS
 

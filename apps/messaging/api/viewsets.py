@@ -1,20 +1,20 @@
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
+# from django.contrib.auth import authenticate, login
 from django.db.models import Q
 from django.utils import timezone
-from rest_framework import status, viewsets
+from rest_framework import status
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework_simplejwt.tokens import RefreshToken, Token
 
+# from rest_framework_simplejwt.tokens import RefreshToken, Token
 from apps.abstracts.viewsets import AbstractViewSet
-from apps.messaging.api.serializers import MessageSerializer, UserSerializer
+from apps.messaging.api.serializers import MessageSerializer
 from apps.messaging.models import MessageModel
+from apps.users.models import User
 
-
+"""
 #ViewSet para el usuario
 class UserViewSet(viewsets.ModelViewSet):    
     serializer_class = UserSerializer  
@@ -64,7 +64,7 @@ class LoginViewSet(viewsets.ViewSet):
             return Response({'access_token': access_token, 'refresh_token': refresh_token,'message': 'Inicio de sesión exitoso'}, status=status.HTTP_200_OK)
         else:
             return Response({'message': 'Nombre de usuario o contraseña incorrectos'}, status=status.HTTP_401_UNAUTHORIZED)
-        
+"""
         
 #ViewSet para los mensajes
 class MessageViewSet(AbstractViewSet):        

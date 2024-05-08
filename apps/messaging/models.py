@@ -1,7 +1,7 @@
-from django.contrib.auth.models import User
 from django.db import models
 
 from apps.abstracts.models import AbstractModel
+from apps.users.models import User
 
 
 class MessageModel(AbstractModel):

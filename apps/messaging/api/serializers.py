@@ -1,9 +1,8 @@
-from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from apps.abstracts.serializers import AbstractSerializer
 from apps.messaging.models import MessageModel
+from apps.users.models import User
 
 
 class MessageSerializer(AbstractSerializer, serializers.ModelSerializer):
@@ -39,7 +38,7 @@ class MessageSerializer(AbstractSerializer, serializers.ModelSerializer):
 
         return message_content
     
-    
+"""   
     
 class CustomJWTSerializer(serializers.Serializer):
     username = serializers.CharField()
@@ -86,6 +85,6 @@ class LoginSerializer(serializers.Serializer):
         data['user'] = user
         return data
 
-
+"""
 
 #TODO: reciever ahora se puede elegir, pero en la app deberá ser el el propietario que haya publicado su casa para alquilar

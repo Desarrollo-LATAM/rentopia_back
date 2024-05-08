@@ -1,7 +1,8 @@
 import json
 
 from channels.generic.websocket import AsyncWebsocketConsumer
-from django.contrib.auth.models import User
+
+from apps.users.models import User
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
