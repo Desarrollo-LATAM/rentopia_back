@@ -4,15 +4,18 @@ from apps.abstracts.serializers import AbstractSerializer
 from apps.messaging.models import MessageModel
 from apps.users.models import User
 
+#TODO: probar hacer propiedades en bd y poder enviar los mensajes de acuerdo a las propiedades asociadas
 
 class MessageSerializer(AbstractSerializer, serializers.ModelSerializer):
     sender = serializers.StringRelatedField()
-    receiver = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())   
+    receiver = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())  
+    receiver_username = serializers.ReadOnlyField(source="receiver.username") 
+    property_title = serializers.ReadOnlyField(source="property.title") 
 
     
     class Meta:
         model = MessageModel 
-        fields = ["id", "created", "updated", "sender", "receiver", "message_content", "deleted_date"]
+        fields = ["id", "created", "updated", "sender", "receiver", "receiver_username", "property_title", "message_content", "deleted_date"]
         
         
     def to_representation(self, instance):

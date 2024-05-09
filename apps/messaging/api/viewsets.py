@@ -8,12 +8,56 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-# from rest_framework_simplejwt.tokens import RefreshToken, Token
 from apps.abstracts.viewsets import AbstractViewSet
 from apps.messaging.api.serializers import MessageSerializer
 from apps.messaging.models import MessageModel
 from apps.users.models import User
+        
+#TODO: modificar el "post" para que se envíe con la propiedad? o con el receiver_username?        
 
+#ViewSet para los mensajes
+class MessageViewSet(AbstractViewSet):        
+    serializer_class = MessageSerializer  
+    authentication_classes = [BasicAuthentication, JWTAuthentication]
+    permission_classes = [IsAuthenticated]  
+    queryset = MessageModel.objects.all()
+
+            
+    def get_queryset(self):
+        user = self.request.user
+        # Filtrar los mensajes donde el usuario actual es el remitente o el receptor
+        return MessageModel.objects.filter(Q(sender=user) | Q(receiver=user)) 
+   
+    
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # Establecer el sender como el usuario autenticado
+        serializer.validated_data['sender'] = request.user
+
+       # Agregar el receptor al validated_data si está presente en la solicitud
+        receiver_id = request.data.get('receiver')
+        if receiver_id:
+            receiver = User.objects.get(pk=receiver_id)
+            serializer.validated_data['receiver'] = receiver
+    
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    
+    @action(detail=True, methods=['delete'])
+    def delete(self, request, pk=None):
+        message = self.get_object()
+        message.is_active = False
+        message.deleted_date = timezone.now()
+        message.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    
+    
+    
 """
 #ViewSet para el usuario
 class UserViewSet(viewsets.ModelViewSet):    
@@ -65,43 +109,3 @@ class LoginViewSet(viewsets.ViewSet):
         else:
             return Response({'message': 'Nombre de usuario o contraseña incorrectos'}, status=status.HTTP_401_UNAUTHORIZED)
 """
-        
-#ViewSet para los mensajes
-class MessageViewSet(AbstractViewSet):        
-    serializer_class = MessageSerializer  
-    authentication_classes = [BasicAuthentication, JWTAuthentication]
-    permission_classes = [IsAuthenticated]  
-    queryset = MessageModel.objects.all()
-
-            
-    def get_queryset(self):
-        user = self.request.user
-        # Filtrar los mensajes donde el usuario actual es el remitente o el receptor
-        return MessageModel.objects.filter(Q(sender=user) | Q(receiver=user)) 
-   
-    
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        # Establecer el sender como el usuario autenticado
-        serializer.validated_data['sender'] = request.user
-
-       # Agregar el receptor al validated_data si está presente en la solicitud
-        receiver_id = request.data.get('receiver')
-        if receiver_id:
-            receiver = User.objects.get(pk=receiver_id)
-            serializer.validated_data['receiver'] = receiver
-    
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    
-    @action(detail=True, methods=['delete'])
-    def delete(self, request, pk=None):
-        message = self.get_object()
-        message.is_active = False
-        message.deleted_date = timezone.now()
-        message.save()
-        return Response(status=status.HTTP_204_NO_CONTENT)
