@@ -41,6 +41,12 @@ class MessageViewSet(AbstractViewSet):
         if receiver_id:
             receiver = User.objects.get(pk=receiver_id)
             serializer.validated_data['receiver'] = receiver
+            
+        # Agregar la propiedad al validated_data si está presente en la solicitud
+        property_id = request.data.get('property')
+        if property_id:
+            property = User.objects.get(pk=property_id)
+            serializer.validated_data['property'] = property
     
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
