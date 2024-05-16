@@ -5,7 +5,6 @@ from apps.messaging.models import MessageModel
 from apps.properties.models import Property
 from apps.users.models import User
 
-#TODO: probar hacer propiedades en bd y poder enviar los mensajes de acuerdo a las propiedades asociadas
 
 class MessageSerializer(AbstractSerializer, serializers.ModelSerializer):
     sender = serializers.StringRelatedField()
@@ -93,4 +92,3 @@ class LoginSerializer(serializers.Serializer):
 
 """
 
-#TODO: reciever ahora se puede elegir, pero en la app deberá ser el el propietario que haya publicado su casa para alquilar
