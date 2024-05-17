@@ -1,6 +1,7 @@
 from django.db import models
 
 from apps.abstracts.models import AbstractModel
+from apps.users.models import User
 
 # Create your models here.
 
@@ -13,6 +14,7 @@ PROPERTY_TYPE_CHOICES = {
 
 class Property(AbstractModel):
     title = models.CharField(max_length=100)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='owner') 
     location = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     size = models.PositiveIntegerField()

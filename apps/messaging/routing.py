@@ -1,13 +1,13 @@
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
-from django.urls import path
+from django.urls import re_path
 
 from apps.messaging.consumers import ChatConsumer
 
 application = ProtocolTypeRouter({
     'websocket': AuthMiddlewareStack(
         URLRouter([
-            path('ws/api/messages/<str:receiver_username>/', ChatConsumer.as_asgi()),
+            re_path(r'ws/api/messages/(?P<property_id>[^/]+)/$', ChatConsumer.as_asgi()),
         ])
     ),
 })

@@ -11,9 +11,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from apps.abstracts.viewsets import AbstractViewSet
 from apps.messaging.api.serializers import MessageSerializer
 from apps.messaging.models import MessageModel
-from apps.users.models import User
         
-#TODO: modificar el "post" para que se envíe con la propiedad? o con el receiver_username?        
 
 #ViewSet para los mensajes
 class MessageViewSet(AbstractViewSet):        
@@ -34,24 +32,20 @@ class MessageViewSet(AbstractViewSet):
         serializer.is_valid(raise_exception=True)
 
         # Establecer el sender como el usuario autenticado
-        serializer.validated_data['sender'] = request.user
+        sender = request.user
+        receiver = serializer.validated_data.get('receiver', None)
+        
+        # Si no se proporciona un receiver, asignar el owner de la propiedad como receiver
+        if not receiver:
+            property_instance = serializer.validated_data['property']
+            receiver = property_instance.owner
+        
+        # Crear el mensaje con el sender autenticado y el receiver determinado
+        serializer.save(sender=sender, receiver=receiver)
 
-       # Agregar el receptor al validated_data si está presente en la solicitud
-        receiver_id = request.data.get('receiver')
-        if receiver_id:
-            receiver = User.objects.get(pk=receiver_id)
-            serializer.validated_data['receiver'] = receiver
-            
-        # Agregar la propiedad al validated_data si está presente en la solicitud
-        property_id = request.data.get('property')
-        if property_id:
-            property = User.objects.get(pk=property_id)
-            serializer.validated_data['property'] = property
-    
-        self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
+    
     
     @action(detail=True, methods=['delete'])
     def delete(self, request, pk=None):
@@ -114,4 +108,34 @@ class LoginViewSet(viewsets.ViewSet):
             return Response({'access_token': access_token, 'refresh_token': refresh_token,'message': 'Inicio de sesión exitoso'}, status=status.HTTP_200_OK)
         else:
             return Response({'message': 'Nombre de usuario o contraseña incorrectos'}, status=status.HTTP_401_UNAUTHORIZED)
+"""
+
+
+"""
+# Establecer el sender como el usuario autenticado 
+        serializer.validated_data['sender'] = request.user
+
+       # Agregar el receptor al validated_data si está presente en la solicitud
+        receiver_id = request.data.get('receiver')
+        if receiver_id:
+            receiver = User.objects.get(pk=receiver_id)
+            serializer.validated_data['receiver'] = receiver
+            
+        # Agregar la propiedad al validated_data si está presente en la solicitud
+        property_id = request.data.get('property')
+        if property_id:
+            property = User.objects.get(pk=property_id)
+            serializer.validated_data['property'] = property
+    
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+
+
+
+        # Establecer el sender como el usuario autenticado  y manejar la lógica del receptor automáticamente en el serializador
+        serializer.save(sender=request.user)
+
 """

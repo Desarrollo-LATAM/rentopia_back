@@ -2,15 +2,13 @@ from rest_framework import serializers
 
 from apps.abstracts.serializers import AbstractSerializer
 from apps.messaging.models import MessageModel
-from apps.properties.models import Property
-from apps.users.models import User
 
 
 class MessageSerializer(AbstractSerializer, serializers.ModelSerializer):
     sender = serializers.StringRelatedField()
-    receiver = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())  
+    #receiver = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())  
     receiver_username = serializers.ReadOnlyField(source="receiver.username") 
-    property = serializers.PrimaryKeyRelatedField(queryset=Property.objects.all())  
+    #property = serializers.PrimaryKeyRelatedField(queryset=Property.objects.all())  
     property_title = serializers.ReadOnlyField(source="property.title") 
 
     
@@ -33,15 +31,29 @@ class MessageSerializer(AbstractSerializer, serializers.ModelSerializer):
         # Establece el remitente como el usuario autenticado
         validated_data['sender'] = user
         
-        # Llama al método create() del modelo MessageModel para crear el objeto
-        message_content = MessageModel.objects.create(
-        sender=validated_data['sender'],
-        receiver=validated_data['receiver'],
-        property=validated_data['property'],
-        message_content=validated_data['message_content']
-    )
+        # Si no se proporciona un receiver, asignar el propietario de la propiedad como receiver
+        if 'receiver' not in validated_data:
+            validated_data['receiver'] = validated_data['property'].owner
 
-        return message_content
+        
+        #validated_data['receiver'] = validated_data['property'].owner
+        return super().create(validated_data)
+    
+        
+        
+        
+        # Llama al método create() del modelo MessageModel para crear el objeto
+    #     message_content = MessageModel.objects.create(
+    #     sender=validated_data['sender'],
+    #     receiver=validated_data['receiver'],
+    #     property=validated_data['property'],
+    #     message_content=validated_data['message_content']
+    # )
+
+    #     return message_content
+    
+    
+    
     
 """   
     
