@@ -30,4 +30,3 @@ class MessageModel(AbstractModel):
         super(MessageModel, self).save(*args, **kwargs)
 
 
-# TODO: como hacer como modo conversación    

@@ -2,7 +2,6 @@
 from django.db.models import Q
 from django.utils import timezone
 from rest_framework import status
-from rest_framework.authentication import BasicAuthentication
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -16,7 +15,7 @@ from apps.messaging.models import MessageModel
 #ViewSet para los mensajes
 class MessageViewSet(AbstractViewSet):        
     serializer_class = MessageSerializer  
-    authentication_classes = [BasicAuthentication, JWTAuthentication]
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]  
     queryset = MessageModel.objects.all()
 
