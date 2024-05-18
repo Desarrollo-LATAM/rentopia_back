@@ -6,9 +6,7 @@ from apps.messaging.models import MessageModel
 
 class MessageSerializer(AbstractSerializer, serializers.ModelSerializer):
     sender = serializers.StringRelatedField()
-    #receiver = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())  
     receiver_username = serializers.ReadOnlyField(source="receiver.username") 
-    #property = serializers.PrimaryKeyRelatedField(queryset=Property.objects.all())  
     property_title = serializers.ReadOnlyField(source="property.title") 
 
     
@@ -40,67 +38,4 @@ class MessageSerializer(AbstractSerializer, serializers.ModelSerializer):
         return super().create(validated_data)
     
         
-        
-        
-        # Llama al método create() del modelo MessageModel para crear el objeto
-    #     message_content = MessageModel.objects.create(
-    #     sender=validated_data['sender'],
-    #     receiver=validated_data['receiver'],
-    #     property=validated_data['property'],
-    #     message_content=validated_data['message_content']
-    # )
-
-    #     return message_content
-    
-    
-    
-    
-"""   
-    
-class CustomJWTSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    password = serializers.CharField(write_only=True)
-    
-    
-class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)  
-
-    class Meta:
-        model = User
-        fields = fields = [
-            'id',
-            'username',            
-            'email', 
-            'password'                 
-        ]
-        
-    def create(self, validated_data):
-        # Extrae la contraseña del campo y aplica el hashing
-        password = validated_data.pop('password')
-        user = User(**validated_data)
-        user.set_password(password)  # Aplica el hashing a la contraseña
-        user.save()
-        return user
-    
-    
-class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    password = serializers.CharField(write_only=True)
-
-    def validate(self, data):
-        username = data.get('username')
-        password = data.get('password')
-
-        if username and password:
-            user = authenticate(request=self.context.get('request'), username=username, password=password)
-
-            if not user:
-                raise serializers.ValidationError("Nombre de usuario o contraseña incorrectos.")
-        else:
-            raise serializers.ValidationError("Debe proporcionar un nombre de usuario y contraseña.")
-
-        data['user'] = user
-        return data
-
-"""
-
+  
