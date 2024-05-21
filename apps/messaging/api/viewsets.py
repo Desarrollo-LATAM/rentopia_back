@@ -1,6 +1,7 @@
 from django.db.models import Q
 from django.utils import timezone
-from rest_framework import status
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -9,11 +10,22 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from apps.abstracts.viewsets import AbstractViewSet
 from apps.messaging.api.serializers import MessageSerializer
 from apps.messaging.models import MessageModel
-        
+from utils.filters import MessageFilterSet
+from utils.pagination import ExtendedPagination
+
 
 #ViewSet para los mensajes
 class MessageViewSet(AbstractViewSet):        
     serializer_class = MessageSerializer  
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
+    filterset_class = MessageFilterSet
+    search_fields = ("sender", "receiver", "property")
+    ordering_fields = ("sender", "receiver", "property")
+    pagination_class = ExtendedPagination
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]  
     queryset = MessageModel.objects.all()
