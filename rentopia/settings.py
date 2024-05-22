@@ -142,19 +142,7 @@ ASGI_APPLICATION = "rentopia.asgi.application"
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
-<<<<<<< HEAD
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'real_state',
-        'USER': 'postgres',
-        'PASSWORD': 'Kurama331',
-        'HOST': 'localhost',  # Puedes cambiarlo si tu base de datos está en otro host
-        'PORT': '5432',  # El puerto predeterminado de PostgreSQL es 5432
-    }
-}
-=======
->>>>>>> origin/back_silvina
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {

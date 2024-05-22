@@ -5,11 +5,11 @@ from apps.abstracts.models import AbstractModel
 
 # Create your models here.
 
-PROPERTY_TYPE_CHOICES = {
-    "AP": "Apartment",
-    "LA": "Land",
-    "HO": "House",
-}
+PROPERTY_TYPE_CHOICES = [
+    ("AP", "Apartment"),
+    ("LA", "Land"),
+    ("HO", "House"),
+]
 
 
 class Property(AbstractModel):
