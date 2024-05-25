@@ -30,6 +30,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     re_path(r"^api/", include("apps.users.api.routers"), name="users"),
     re_path(r"^api/", include("apps.properties.api.routers"), name="properties"),
+    re_path(r"^api/", include("apps.messaging.api.routers"), name="messages"),
     re_path(r"^api/", include("apps.owners.api.routers"), name="owners"),
     re_path(r"^api/", include("apps.tenants.api.routers"), name="tenants"),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),

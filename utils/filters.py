@@ -1,5 +1,6 @@
 from django_filters import rest_framework
 
+from apps.messaging.models import MessageModel
 from apps.owners.models import Owner
 from apps.tenants.models import Tenant
 from apps.users.models import User
@@ -37,3 +38,13 @@ class TenantFilterSet(rest_framework.FilterSet):
             "rating_user",
         )
         ordering = ("created",)
+
+
+class MessageFilterSet(rest_framework.FilterSet):
+    class Meta:
+        model = MessageModel
+        fields = (
+            "sender",
+            "receiver",
+            "property",
+        )
