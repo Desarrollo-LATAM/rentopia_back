@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import logging
 import os
+from datetime import timedelta
 from pathlib import Path
 
 import environ
@@ -42,12 +43,24 @@ SECRET_KEY = env("SECRET_KEY")
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": env("DB_NAME"),
+        "USER": env("DB_USER"),
+        "PASSWORD": env("DB_PASSWORD"),
+        "HOST": env("DB_HOST"),
+        "PORT": env("DB_PORT"),
+    }
+}
+
 ALLOWED_HOSTS = []
 
 
 # Application definition
 # Applications core of Django
-BASE_APPS = [
+BASE_APPS = [   
+    "daphne",     
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -58,6 +71,7 @@ BASE_APPS = [
 
 # Local applications
 LOCAL_APPS = [
+    "apps.users",
     "apps.booking",
     "apps.chatbot",
     "apps.geolocalization",
@@ -65,14 +79,25 @@ LOCAL_APPS = [
     "apps.properties",
     "apps.rating",
     "apps.upload",
-    "apps.users",
+    "apps.owners",
+    "apps.tenants",
+    "apps.authentication",
 ]
 
 # Third persons applications
-THIRD_APPS = [
+THIRD_APPS = [      
+    "channels", 
     "rest_framework",
+    "rest_framework.authtoken",
+    "rest_framework_simplejwt",
     "django_filters",
     "drf_spectacular",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    #"allauth.socialaccount.providers.google",
+    "dj_rest_auth",
+    "dj_rest_auth.registration",
     "drf_standardized_errors",
 ]
 
@@ -86,9 +111,12 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    #"allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "rentopia.urls"
+
+SITE_ID = 1  # make sure SITE_ID is set
 
 TEMPLATES = [
     {
@@ -106,13 +134,14 @@ TEMPLATES = [
     },
 ]
 
+
 WSGI_APPLICATION = "rentopia.wsgi.application"
+
+ASGI_APPLICATION = "rentopia.asgi.application"
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
-MONGODB_CONNECTION_STRING = env("CONNECTION_STRING")
-MONGODB_DATABASE = env("DATABASE")
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -129,13 +158,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = "users.User"
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
 LANGUAGE_CODE = "es-mx"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "America/Buenos_Aires"
 
 USE_I18N = True
 
@@ -153,11 +183,90 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
-    # "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_SCHEMA_CLASS": "drf_standardized_errors.openapi.AutoSchema",
     "EXCEPTION_HANDLER": "drf_standardized_errors.handler.exception_handler",
 }
 
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": False,
+    "UPDATE_LAST_LOGIN": True,
+    "SIGNING_KEY": "complexsigningkey",  # generate a key and replace me
+    "ALGORITHM": "HS512",
+}
+
+REST_AUTH = {
+    "USE_JWT": True,
+    "JWT_AUTH_HTTPONLY": False,
+    "REGISTER_SERIALIZER": "apps.users.api.serializers.UserRegistrationSerializer",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Rentopia API",
+    "DESCRIPTION": "API para la plataforma de alquiler de propiedades Rentopia",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": True,
+    "COMPONENT_SPLIT_REQUEST": True,
+    # "SCHEMA_PATH_PREFIX_INSERT": "/staging",
+    # OTHER SETTINGS
+    "ENUM_NAME_OVERRIDES": {
+        "ValidationErrorEnum": "drf_standardized_errors.openapi_serializers.ValidationErrorEnum.choices",
+        "ClientErrorEnum": "drf_standardized_errors.openapi_serializers.ClientErrorEnum.choices",
+        "ServerErrorEnum": "drf_standardized_errors.openapi_serializers.ServerErrorEnum.choices",
+        "ErrorCode401Enum": "drf_standardized_errors.openapi_serializers.ErrorCode401Enum.choices",
+        "ErrorCode403Enum": "drf_standardized_errors.openapi_serializers.ErrorCode403Enum.choices",
+        "ErrorCode404Enum": "drf_standardized_errors.openapi_serializers.ErrorCode404Enum.choices",
+        "ErrorCode405Enum": "drf_standardized_errors.openapi_serializers.ErrorCode405Enum.choices",
+        "ErrorCode406Enum": "drf_standardized_errors.openapi_serializers.ErrorCode406Enum.choices",
+        "ErrorCode415Enum": "drf_standardized_errors.openapi_serializers.ErrorCode415Enum.choices",
+        "ErrorCode429Enum": "drf_standardized_errors.openapi_serializers.ErrorCode429Enum.choices",
+        "ErrorCode500Enum": "drf_standardized_errors.openapi_serializers.ErrorCode500Enum.choices",
+    },
+    "POSTPROCESSING_HOOKS": [
+        "drf_standardized_errors.openapi_hooks.postprocess_schema_enums"
+    ],
+}
+
+# Provider specific settings
+# SOCIALACCOUNT_PROVIDERS = {
+#     "google": {
+#         # For each OAuth based provider, either add a ``SocialApp``
+#         # (``socialaccount`` app) containing the required client
+#         # credentials, or list them here:
+#         "APP": {"client_id": "123", "secret": "456", "key": ""}
+#     }
+# }
+
+ACCOUNT_AUTHENTICATION_METHOD = "username"
+# The user is required to hand over an e-mail address when signing up.
+ACCOUNT_EMAIL_REQUIRED = True
+
+# Determines the e-mail verification method during signup. When set to
+# "mandatory" the user is blocked from logging in until the email
+# address is verified. Choose "optional" or "none" to allow logins
+# with an unverified e-mail address. In case of "optional", the e-mail
+# verification mail is still sent, whereas in case of "none" no e-mail
+# verification mails are sent.
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+
+# <EMAIL_CONFIRM_REDIRECT_BASE_URL>/<key>
+EMAIL_CONFIRM_REDIRECT_BASE_URL = "http://localhost:3000/email/confirm/"
+
+# <PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL>/<uidb64>/<token>/
+PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL = (
+    "http://localhost:3000/password-reset/confirm/"
+)
+
+STATIC_URL = "staticfiles/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+MEDIA_URLS = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+# # Correo electrónico
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 ADMINS = [({env("ADMIN1_NAME")}, {env("ADMIN1_EMAIL")})]
 
