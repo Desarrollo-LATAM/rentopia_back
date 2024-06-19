@@ -81,4 +81,8 @@ class HouseViewSet(viewsets.ModelViewSet):
 
     filterset_fields = {
     'price': ['lte', 'gte'],       
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes
