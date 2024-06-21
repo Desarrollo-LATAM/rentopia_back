@@ -25,9 +25,14 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 
+from apps.messaging import views
+
 urlpatterns = [
     path("api/auth/", include("apps.authentication.urls")),
-    path("admin/", admin.site.urls),
+    path("admin/", admin.site.urls), 
+    path('', views.index, name='index'),
+    path('properties/', views.properties, name='properties'),
+    path('messages/<uuid:property_id>/', views.room, name='room'),
     re_path(r"^api/", include("apps.users.api.routers"), name="users"),
     re_path(r"^api/", include("apps.properties.api.routers"), name="properties"),
     re_path(r"^api/", include("apps.messaging.api.routers"), name="messages"),

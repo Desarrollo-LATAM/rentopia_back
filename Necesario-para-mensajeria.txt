@@ -1,0 +1,111 @@
+Para poder usar la parte de mensajería del proyecto
+
+Instalar Redis:
+
+Deben instalar la última versión de Redis. Si están usando Windows, lo mejor es usar WSL 
+(Windows Subsystem for Linux) para instalar Redis.
+
+Instrucciones para instalar WSL y Redis:
+
+Habilitar WSL:
+
+Abrir PowerShell como administrador y ejecutar:
+
+
+wsl --install
+
+
+Reiniciar la computadora después de que la instalación se complete.
+
+Instalar Ubuntu desde la Microsoft Store.
+
+Instalar Redis en Ubuntu (dentro de WSL):
+
+Abrir la aplicación de Ubuntu y ejecutar los siguientes comandos:
+
+
+sudo apt update
+sudo apt install redis-server
+
+
+Editar el archivo de configuración de Redis para permitir conexiones externas:
+
+
+sudo nano /etc/redis/redis.conf
+
+
+Comentar la línea bind 127.0.0.1 ::1 y añadir bind 0.0.0.0.
+
+Guardar y salir (Ctrl+O para guardar, Ctrl+X para salir).
+
+
+Reiniciar Redis:
+
+
+sudo service redis-server restart
+Configurar Redis para aceptar conexiones:
+
+Obtener la dirección IP de WSL:
+
+
+wsl hostname -I
+
+
+Actualizar la configuración de CHANNEL_LAYERS en settings.py para usar la dirección IP de 
+WSL. Por ejemplo:
+
+settings.py
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("WSL_IP_ADDRESS", 6379)],  # Reemplaza WSL_IP_ADDRESS con la dirección IP obtenida
+        },
+    },
+}
+
+
+Instalar dependencias del proyecto:
+
+Crear y activar un entorno virtual:
+
+
+python -m venv venv
+
+source venv/bin/activate  
+# En Windows: venv\Scripts\activate
+
+Instalar las dependencias del proyecto desde requirements.txt:
+
+
+pip install -r requirements.txt
+
+
+
+Asegúrate de que Redis esté corriendo.
+
+Iniciar el servidor de Django:
+
+
+python manage.py runserver
+
+
+Iniciar Redis
+Redis debe estar en funcionamiento antes de iniciar tu proyecto Django para que las 
+conexiones y operaciones relacionadas con Channels funcionen correctamente. Aquí hay 
+algunas maneras de gestionar esto:
+
+Iniciar Redis manualmente:
+
+Cada vez que vayas a trabajar en tu proyecto, asegúrate de que Redis esté corriendo. 
+En WSL:
+
+
+sudo service redis-server start
+
+
+Puedes verificar que Redis esté corriendo con:
+
+
+sudo service redis-server status

@@ -1,0 +1,117 @@
+{% extends 'messaging/base.html'%}
+
+{% block titulo %}
+Mensajes
+{% endblock titulo %}
+
+{% block contenido %}
+    <h1>Mensajes</h1>
+    <h1 id="room_name">Propiedad: {{ property_title  }}</h1> 
+    <form id="form">
+        <div id="message" class="form-group">
+            <div>
+                <input type="text" id="text" name="message" placeholder="Enter a Message"> 
+                <button id="submit">Submit</button>
+            </div>
+        </div> 
+    </form> 
+    <div id="message_box"> 
+        <div id="messages">
+            <!-- Los mensajes se cargarán aquí -->
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let property_id = "{{ property_id }}";  // Asumiendo que pasas property_id en el contexto
+            let url = `http://${window.location.host}/api/messages/?property=${property_id}`;
+
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + sessionStorage.getItem('access_token'), 
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);  // Agregar esto para depurar la respuesta
+                if (!Array.isArray(data.results)) {
+                    console.error('Expected an array but got:', data);
+                    return;
+                }
+                let messages = document.getElementById('messages');
+                data.results.forEach(message => {
+                    messages.insertAdjacentHTML('beforeend', `<div id=${message.sender  === sessionStorage.getItem('username') ? 'me' : 'room_message'}>
+                        <p>${message.sender }</p>
+                        <p>${message.message_content}</p>
+                        <p><small>${message.created}</small></p>
+                    </div>`);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching messages:', error);
+            });
+
+            // Conexión WebSocket
+            let socketUrl = `ws://${window.location.host}/ws/api/messages/${property_id}/`;
+            console.log('Connecting to WebSocket at:', socketUrl);
+            const chatSocket = new WebSocket(socketUrl);
+
+            chatSocket.onopen = function() {
+                console.log('WebSocket connection opened');
+            };
+
+            chatSocket.onclose = function(e) {
+                console.error('WebSocket connection closed:', e);
+            };
+
+            chatSocket.onerror = function(error) {
+                console.error('WebSocket error:', error);
+            };
+
+            chatSocket.onmessage = function(e) {
+                let data = JSON.parse(e.data);
+                console.log('Message sent:', data);
+                if (data.type === 'chat_message') {
+                    let messages = document.getElementById('messages');
+                    messages.insertAdjacentHTML('beforeend', `<div id=${data.sender === sessionStorage.getItem('username') ? 'me' : 'room_message'}>
+                        <p>${data.sender}</p>
+                        <p>${data.message_content}</p>
+                        <p><small>${new Date().toLocaleString()}</small></p>
+                    </div>`);
+                }
+            };        
+
+            let form = document.getElementById('form');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                let message = e.target.message.value;
+                let user_name = sessionStorage.getItem('username');
+
+                if (chatSocket.readyState === WebSocket.OPEN) {
+                    chatSocket.send(JSON.stringify({
+                        'message_content': message,
+                        'sender': user_name,
+                    }))
+                    console.log('Message on form:', message);
+                    ;
+                form.reset();
+                } else {
+                    console.error('WebSocket is not open.');
+                }
+            });
+        });
+    </script>
+{% endblock contenido %}
+
+
+
+
+
+
+
+{% comment %} let room_name = "{{ room_name }}"; {% endcomment %}
+                {% comment %} let room_name = "{{ room_name }}"; {% endcomment %}
+
+                                {% comment %} let chatSocket = new WebSocket(`ws://${window.location.host}/ws/api/messages/${property_id}/`); {% endcomment %}
+

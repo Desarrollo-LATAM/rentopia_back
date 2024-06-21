@@ -87,6 +87,7 @@ LOCAL_APPS = [
 # Third persons applications
 THIRD_APPS = [      
     "channels", 
+    "channels_redis",
     "rest_framework",
     "rest_framework.authtoken",
     "rest_framework_simplejwt",
@@ -138,6 +139,15 @@ TEMPLATES = [
 WSGI_APPLICATION = "rentopia.wsgi.application"
 
 ASGI_APPLICATION = "rentopia.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("172.26.138.25", 6379)],
+        },
+    },
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -343,3 +353,5 @@ LOGGING = {
         },
     },
 }
+
+

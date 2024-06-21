@@ -30,3 +30,17 @@ class MessageModel(AbstractModel):
         super(MessageModel, self).save(*args, **kwargs)
 
 
+
+class Room(AbstractModel):
+    name = models.CharField(max_length=255)
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='rooms')
+
+    def __str__(self):
+        return self.name
+    
+    
+# class Message(models.Model):
+#     room = models.ForeignKey(Room, related_name='messages', on_delete=models.CASCADE)
+#     username = models.CharField(max_length=255)
+#     content = models.TextField()
+#     timestamp = models.DateTimeField(auto_now_add=True)

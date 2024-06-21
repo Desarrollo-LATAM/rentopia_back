@@ -16,6 +16,7 @@ class Property(AbstractModel):
     title = models.CharField(max_length=100)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='owner') 
     location = models.CharField(max_length=100)
+    description = models.CharField(max_length=500)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     size = models.PositiveIntegerField()
     num_bedrooms = models.PositiveIntegerField()

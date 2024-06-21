@@ -1,0 +1,40 @@
+{% extends 'messaging/base.html' %}
+
+{% block titulo %}
+Propiedades
+{% endblock titulo %}
+
+{% block contenido %}
+    <h1>Propiedades</h1>
+    <div id="properties-list"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('http://127.0.0.1:8000/api/properties/', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + sessionStorage.getItem('access_token'),
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                let propertiesList = document.getElementById('properties-list');
+                data.forEach(property => {                    
+                    propertiesList.insertAdjacentHTML('beforeend', `
+                        <div>
+                            <h2>${property.title}</h2>
+                            <p>${property.description}</p>
+                             <p>ID: ${property.id}</p> <!-- Mostrar el ID para depuración -->
+                            <button onclick="goToMessages('${property.id}')">Enviar mensaje al propietario</button>
+                        </div>
+                    `);
+                });
+            });
+        });
+
+        function goToMessages(property_id) {
+            console.log(property_id)
+            window.location.href = `/messages/${property_id}/`;
+        }
+    </script>
+{% endblock contenido %}
